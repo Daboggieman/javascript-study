@@ -1,0 +1,10 @@
+{
+  "name": "javascript-study",
+  "version": "0.1.0",
+  "description": "A structured, self-paced JavaScript/Node.js curriculum with piscine-style practice questions, converted from python-study",
+  "main": "",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
