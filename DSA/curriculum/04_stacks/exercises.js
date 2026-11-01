@@ -40,7 +40,7 @@ function isBalanced(expression) {
 
 
 // TODO: Exercise 5
-// Use a Stack to reverse a string (do not use .reverse() or slicing tricks).
+// Use a Stack to reverse a string (do not use .reverse() or split/reverse/join).
 function reverseString(s) {
   // Write your solution here
 }

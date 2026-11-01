@@ -19,12 +19,12 @@ class Node {
 }
 ```
 
-> **JS-specific note:** JS has both `null` ("intentionally nothing") and `undefined` ("never set"). In DSA code we set `next = null` explicitly, and a missing field you never assigned reads back as `undefined`. Compare with `=== null` / `=== undefined` — always use strict equality.
-
 That's it. That's the entire idea. Everything else in this DSA module is variations on this theme:
 - A **linked list node** has one `next` pointer (or two, for doubly linked).
-- A **binary tree node** has `left` and `right` references instead of `next`.
+- A **binary tree node** has `left` and `right` pointers instead of `next`.
 - A **graph node** ("vertex") can have any number of neighbors.
+
+> **JS-specific note:** JS has both `null` ("intentionally nothing") and `undefined` ("never assigned"). In DSA code we set `next = null` explicitly; a field you never assigned reads back as `undefined`. Always compare with `===` / `!==`.
 
 ---
 
@@ -85,7 +85,7 @@ console.log(empNode.data.name);  // Ada
 
 ## 📚 Resources
 
-- **Docs:** [MDN — Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) (nodes are just classes!) · [javascript.info — Class basic syntax](https://javascript.info/class)
+- **W3Schools:** [JavaScript Classes](https://www.w3schools.com/js/js_classes.asp) (nodes are just classes!)
 - **YouTube:** [mycodeschool — Introduction to Linked List](https://www.youtube.com/watch?v=NobHlGUjV3g) — one of the most time-tested DSA explainer channels
 - **YouTube:** [freeCodeCamp — Data Structures Easy to Advanced](https://www.youtube.com/watch?v=RBSGKlAvoiM)
 

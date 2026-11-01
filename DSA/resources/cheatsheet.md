@@ -31,11 +31,11 @@ From fastest to slowest (n = input size):
 
 | Structure | Access | Search | Insert | Delete | Notes |
 |---|---|---|---|---|---|
-| JS Array | O(1) | O(n) | O(n) worst, O(1) amortized at end | O(n) worst, O(1) at end | Contiguous-ish, index-based |
+| JS Array | O(1) | O(n) | O(n) worst, O(1) amortized at end | O(n) worst, O(1) at end | Contiguous-ish memory |
 | Linked List (singly) | O(n) | O(n) | O(1) at head | O(1) at head | No random access |
 | Stack | O(n) | O(n) | O(1) push | O(1) pop | LIFO, top only |
-| Queue | O(n) | O(n) | O(1) enqueue | O(1) dequeue | FIFO, both ends |
-| Hash Table (Map/Set/object) | — | O(1) avg, O(n) worst | O(1) avg | O(1) avg | Collisions degrade worst case |
+| Queue (linked list / head-index) | O(n) | O(n) | O(1) enqueue | O(1) dequeue | FIFO, both ends |
+| Hash Table (Map/Set) | — | O(1) avg, O(n) worst | O(1) avg | O(1) avg | Collisions degrade worst case |
 | Binary Search Tree | O(log n) avg, O(n) worst | O(log n) avg, O(n) worst | O(log n) avg, O(n) worst | O(log n) avg, O(n) worst | Degenerates if unbalanced |
 | AVL Tree | O(log n) | O(log n) | O(log n) | O(log n) | Always balanced |
 | Graph (adj. list) | — | O(V+E) | O(1) edge | O(E) edge | BFS/DFS traversal |
@@ -52,23 +52,21 @@ From fastest to slowest (n = input size):
 | Merge Sort | O(n log n) | O(n log n) | O(n log n) | O(n) | Yes | No |
 | Counting Sort | O(n+k) | O(n+k) | O(n+k) | O(n+k) | Yes | No |
 | Radix Sort | O(d(n+k)) | O(d(n+k)) | O(d(n+k)) | O(n+k) | Yes | No |
-| JS `Array.prototype.sort` (TimSort in V8) | O(n) | O(n log n) | O(n log n) | O(n) | Yes (required by spec) | No (returns the same array, sorted) |
-
-Note: JS's built-in sort takes a **comparator** — `arr.sort((a, b) => a - b)` for numbers (the default sorts strings!).
+| JS `sort()` (TimSort in V8) | O(n) | O(n log n) | O(n log n) | O(n) | Yes (required by spec) | No (sorts the same array in place, but TimSort allocates) |
 
 ---
 
-## 1. Arrays
+## 1. Lists (Dynamic Arrays)
 
 ```js
 const nums = [1, 2, 3];
-nums.push(4);             // O(1) amortized
-nums.pop();               // O(1)
-nums.shift();             // O(n) — front, everything shifts left
-nums.unshift(0);          // O(n) — front, everything shifts right
-nums.includes(x);         // O(n)
-nums[1];                  // O(1)
-nums.length;              // O(1)
+nums.push(4);          // O(1) amortized
+nums.pop();            // O(1)
+nums.shift();          // O(n)
+nums.unshift(0);       // O(n)
+nums.includes(x);      // O(n)
+nums[1];               // O(1)
+nums.length;           // O(1)
 ```
 **Rule:** front/middle operations are O(n); end operations are O(1).
 
@@ -89,7 +87,7 @@ Nodes live anywhere in memory; they're connected by references, not physical adj
 ```js
 function reverse(head) {
   let prev = null;
-  while (head) {
+  while (head !== null) {
     const nxt = head.next;
     head.next = prev;
     prev = head;
@@ -101,7 +99,7 @@ function reverse(head) {
 function findMiddle(head) {          // slow/fast pointer
   let slow = head;
   let fast = head;
-  while (fast && fast.next) {
+  while (fast !== null && fast.next !== null) {
     slow = slow.next;
     fast = fast.next.next;
   }
@@ -111,10 +109,12 @@ function findMiddle(head) {          // slow/fast pointer
 function hasCycle(head) {            // Floyd's algorithm
   let slow = head;
   let fast = head;
-  while (fast && fast.next) {
+  while (fast !== null && fast.next !== null) {
     slow = slow.next;
     fast = fast.next.next;
-    if (slow === fast) return true;
+    if (slow === fast) {
+      return true;
+    }
   }
   return false;
 }
@@ -124,42 +124,44 @@ function hasCycle(head) {            // Floyd's algorithm
 
 ```js
 const stack = [];
-stack.push(x);        // push
-stack.pop();          // pop
-stack[stack.length - 1];  // peek
-stack.length === 0;   // is_empty
+stack.push(x);                 // push
+stack.pop();                   // pop
+stack[stack.length - 1];       // peek
+stack.length === 0;            // isEmpty
 ```
 Uses: function call stack, undo/redo, DFS, balanced brackets, expression evaluation.
 
 ## 5. Queues (FIFO)
 
 ```js
-class Queue {
-  constructor() { this.items = []; }
-  enqueue(x) { this.items.push(x); }   // O(1)
-  dequeue()  { return this.items.shift(); }  // O(n) — teach a linked-list/two-stack version for O(1)!
-}
+const q = [];          // JS has no built-in deque; head-index array or linked list for O(1)
+q.push(x);             // enqueue
+q.shift();             // dequeue (O(n) on a plain array — see Lesson 05 for O(1) options)
+q[0];                  // peek
 ```
-Uses: BFS, task scheduling, buffering. Never use `array.shift()` for a hot queue — it's O(n); build a linked-list queue (Lesson 05) instead.
+Uses: BFS, task scheduling, buffering. Never use `array.shift()` in a hot queue — it's O(n).
 
 **Priority Queue:**
-JS has no built-in heap. Use a sorted array for small inputs, or build a binary heap (a `MinHeap` class) when performance matters.
+```js
+// JS has no heapq — for study code, a sorted array is a readable stand-in:
+const pq = [];
+pq.push([priority, item]);
+pq.sort((a, b) => a[0] - b[0]);
+pq.shift();     // returns lowest-priority-number item first
+```
 
 ## 6. Hash Tables
 
 ```js
 const m = new Map();
-m.set(key, value);      // O(1) avg insert/update
-m.get(key);             // O(1) avg lookup, undefined if missing
-m.has(key);             // O(1) avg
-m.delete(key);          // O(1) avg
-
+m.set(key, value);     // O(1) avg insert/update
+m.get(key);            // O(1) avg lookup, undefined if missing
+m.has(key);            // O(1) avg
+m.delete(key);         // O(1) avg
 const s = new Set();
 s.add(x); s.has(x); s.delete(x);   // all O(1) avg
-
-const obj = {};          // plain object = fixed string keys only
 ```
-`Map` keys can be any type (objects, functions, NaN); object keys are always strings/symbols. Prefer `Map` for dynamic keys, object literals for fixed record shapes.
+Anything can be a `Map` key (compared by identity/reference); plain objects only take string/symbol keys. `Map` ≠ Python `dict`: there is no "hashable types" restriction.
 
 ## 7. Trees (General / N-ary)
 
@@ -173,15 +175,17 @@ class TreeNode {
 
 function dfs(node) {
   console.log(node.data);
-  for (const c of node.children) dfs(c);
+  for (const c of node.children) {
+    dfs(c);
+  }
 }
 
 function bfs(root) {
-  const queue = [root];
-  while (queue.length) {
-    const node = queue.shift();   // fine for small trees; O(1) with a linked-list queue
+  const q = [root];
+  while (q.length > 0) {
+    const node = q.shift();
     console.log(node.data);
-    queue.push(...node.children);
+    q.push(...node.children);
   }
 }
 ```
@@ -197,22 +201,22 @@ class TreeNode {
   }
 }
 
-function inorder(n, r = []) {   // Left, Node, Right (sorted order for a BST)
-  if (n) {
+function inorder(n, r = []) {     // Left, Node, Right (sorted order for a BST)
+  if (n !== null) {
     inorder(n.left, r); r.push(n.data); inorder(n.right, r);
   }
   return r;
 }
 
-function preorder(n, r = []) {  // Node, Left, Right
-  if (n) {
+function preorder(n, r = []) {    // Node, Left, Right
+  if (n !== null) {
     r.push(n.data); preorder(n.left, r); preorder(n.right, r);
   }
   return r;
 }
 
-function postorder(n, r = []) { // Left, Right, Node
-  if (n) {
+function postorder(n, r = []) {   // Left, Right, Node
+  if (n !== null) {
     postorder(n.left, r); postorder(n.right, r); r.push(n.data);
   }
   return r;
@@ -244,19 +248,19 @@ function search(root, target) {
 ## 10. AVL Trees
 
 ```js
-const getHeight = (n) => (n ? n.height : 0);
-const getBalance = (n) => (n === null ? 0 : getHeight(n.left) - getHeight(n.right));
+function getHeight(n) { return n !== null ? n.height : 0; }
+function getBalance(n) { return n === null ? 0 : getHeight(n.left) - getHeight(n.right); }
 
 // balance_factor outside [-1, 0, 1] -> rotate
-// LL -> rotate_right | RR -> rotate_left
-// LR -> rotate_left(child) then rotate_right | RL -> rotate_right(child) then rotate_left
+// LL -> rotateRight | RR -> rotateLeft
+// LR -> rotateLeft(child) then rotateRight | RL -> rotateRight(child) then rotateLeft
 ```
 Self-balancing BST: guarantees O(log n) height always, at the cost of bookkeeping on every insert/delete.
 
 ## 11. Graphs
 
 ```js
-const graph = { A: ["B", "C"], B: ["A"], C: ["A"] };   // adjacency list (object or Map)
+const graph = { A: ["B", "C"], B: ["A"], C: ["A"] };   // adjacency list
 
 function dfs(g, start, visited = new Set()) {
   visited.add(start);
@@ -268,15 +272,13 @@ function dfs(g, start, visited = new Set()) {
 
 function bfs(g, start) {
   const visited = new Set([start]);
-  const queue = [start];
+  const q = [start];
   const order = [];
-  while (queue.length) {
-    const node = queue.shift();
-    order.push(node);
+  while (q.length > 0) {
+    const node = q.shift(); order.push(node);
     for (const nb of g[node]) {
       if (!visited.has(nb)) {
-        visited.add(nb);
-        queue.push(nb);
+        visited.add(nb); q.push(nb);
       }
     }
   }
@@ -312,7 +314,7 @@ function binarySearch(arr, target) {
   return -1;
 }
 ```
-O(log n), **requires sorted input**. JS has no built-in bisect — write it yourself (Lesson 13).
+O(log n), **requires sorted input**. JS has no `bisect` — hand-roll `bisectLeft` for insertion points.
 
 ## 14. Bubble Sort
 
@@ -394,7 +396,7 @@ Not comparison-based. O(n+k). Only good when the value range k is small relative
 ```js
 function radixSort(arr) {
   if (arr.length === 0) return arr;
-  let maxVal = Math.max(...arr);
+  const maxVal = Math.max(...arr);
   let exp = 1;
   let result = arr;
   while (Math.floor(maxVal / exp) > 0) {
@@ -428,7 +430,8 @@ function merge(left, right) {
       result.push(right[j]); j += 1;
     }
   }
-  return result.concat(left.slice(i), right.slice(j));
+  result.push(...left.slice(i)); result.push(...right.slice(j));
+  return result;
 }
 ```
 O(n log n) guaranteed in every case. Stable. Not in-place (needs O(n) extra space).
@@ -453,4 +456,4 @@ O(n log n) guaranteed in every case. Stable. Not in-place (needs O(n) extra spac
 
 ## 📚 More Resources
 
-See `DSA/resources/links.md` for the full curated list of docs, YouTube playlists, and articles referenced throughout every `DSA/curriculum/` lesson.
+See `DSA/resources/links.md` for the full curated list of W3Schools pages, YouTube playlists, and articles referenced throughout every `DSA/curriculum/` lesson.

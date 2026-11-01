@@ -2,11 +2,9 @@
 // Run this script with: node exercises.js
 
 
-// TODO: build this Queue on a linked list (see lecture) or an array of your
-// choice — the API below is what matters.
 class Queue {
   constructor() {
-    this._items = [];
+    this._items = [];   // plain array is OK here; the lecture shows O(1) options
   }
 
   // TODO: Exercise 1

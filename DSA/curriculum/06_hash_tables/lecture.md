@@ -14,9 +14,9 @@ key "apple" --> hash("apple") --> 7264891... --> % table_size --> index 4
 
 Because computing a hash and jumping to an array index are both O(1), lookup is O(1) on average — you never have to scan through every key.
 
+> **JS-specific note:** Python exposes its built-in `hash()` function; **JavaScript does not** — the engine's hash functions are internal. For study code we write our own small deterministic string hash (same input, same output, every run):
+
 ```js
-// JS doesn't expose its built-in string hash function directly, but we can
-// write our own (a classic "polynomial rolling hash"):
 function stringHash(key) {
   let h = 0;
   for (const ch of key) {
@@ -28,8 +28,6 @@ function stringHash(key) {
 console.log(stringHash("apple"));              // some integer (same in every run)
 console.log(stringHash("apple") === stringHash("apple"));  // true — same input, same hash, always
 ```
-
-> **JS-specific note:** Python's `hash()` is randomized between sessions for strings, so its value changes run to run. Our hand-rolled hash is deterministic — same input, same output, every time.
 
 ---
 
@@ -93,7 +91,7 @@ Two different keys can hash to the *same* bucket index — this is called a **co
 
 Other collision strategies:
 - **Open addressing** — on collision, probe to the next available slot (linear probing, quadratic probing, double hashing).
-- **Chaining** — what we implemented above; typically simpler and easier to learn from first (Python's real dict uses open addressing; V8's `Map` is a hash-table-backed structure too).
+- **Chaining** — what we implemented above; simpler and easier to learn from first (CPython's real dict uses open addressing, and V8's built-in `Map` is also a professionally-tuned hash table under the hood).
 
 Good hash tables also **resize** (like dynamic arrays) once they get too full, to keep collisions rare.
 
@@ -107,11 +105,11 @@ Good hash tables also **resize** (like dynamic arrays) once they get too full, t
 | Lookup | O(1) | O(n) |
 | Delete | O(1) | O(n) |
 
-In practice, with a good hash function and resizing, worst case is extremely rare — this is why `Map` (and plain objects) are the workhorses of JavaScript.
+In practice, with a good hash function and resizing, worst case is extremely rare — this is why `Map` is the workhorse of JavaScript's dynamic key-value needs.
 
 ---
 
-## 5. The Built-in Hash Tables: `Map`, `Set`, and Plain Objects
+## 5. The Built-in Hash Tables: `Map` and `Set`
 
 ```js
 const prices = new Map([["apple", 1.50], ["banana", 0.50]]);
@@ -124,7 +122,7 @@ const uniqueIds = new Set([1, 2, 2, 3, 3, 3]);
 console.log(uniqueIds);       // Set(3) { 1, 2, 3 } -- O(1) average membership + dedup
 ```
 
-> **JS-specific note (differs from Python):** Python *only* allows hashable (immutable) keys. JS is the opposite — **anything** can be a `Map` key, including arrays and objects, because `Map` compares keys by identity (reference), not by contents. So `m.set([1, 2], "a")` works, but `[1,2] !== [1,2]` means two equal arrays are two different keys. Use strings (or a serialized key) when you want content-based keys. Plain objects work only with string/symbol keys — use `Map` for anything else.
+> **JS-specific note (differs from Python):** Python *only* allows hashable (immutable) keys. JavaScript is the opposite — **anything** can be a `Map` key, including arrays and objects, because `Map` compares keys by **identity** (reference), not by contents. So `m.set([1, 2], "a")` works, but since `[1,2] !== [1,2]`, two equal arrays are two different keys. Use strings (or a serialized key) when you want content-based keys. Plain objects only accept string/symbol keys — use `Map` for anything else.
 
 ---
 
@@ -133,6 +131,7 @@ console.log(uniqueIds);       // Set(3) { 1, 2, 3 } -- O(1) average membership +
 - **Docs:** [MDN — Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) · [MDN — Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) · [javascript.info — Map and Set](https://javascript.info/map-set)
 - **YouTube:** [mycodeschool — Hashing / Hash Tables](https://www.youtube.com/watch?v=shs0KM3wKv8)
 - **YouTube:** [Abdul Bari — Hashing](https://www.youtube.com/watch?v=mFY0J0hf4Zs)
+- **W3Schools:** [DSA Hash Tables](https://www.w3schools.com/dsa/dsa_data_hashtables.php)
 
 ---
 
@@ -141,4 +140,4 @@ console.log(uniqueIds);       // Set(3) { 1, 2, 3 } -- O(1) average membership +
 1. Implement `HashTable` from scratch above, then test `put`, `get`, and `remove` with several keys that intentionally collide (hint: use a tiny `capacity` like 2 to force collisions).
 2. Write a function `firstRepeatedChar(s)` that returns the first character that appears more than once in a string, using a hash table (`Set` or `Map`) to do it in O(n) instead of the naive O(n²) nested-loop approach.
 3. Write `twoSum(nums, target)` that returns the indices of two numbers that add up to `target`, in O(n) time using a `Map` (the classic interview question).
-4. Explain in a comment why `m.set([1,2], "a")` followed by `m.get([1,2])` returns `undefined` in JavaScript, even though it "works" for a Python dict.
+4. Explain in a comment why `m.set([1,2], "a")` followed by `m.get([1,2])` returns `undefined` in JavaScript, even though a Python dict with a tuple key works.

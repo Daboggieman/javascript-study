@@ -52,13 +52,13 @@ class LinkedList {
 }
 ```
 
-> **JS-specific note:** methods are declared right in the class body — no `self`, and no `def`. Inside a method, `this` refers to the instance, but unlike Python it only binds correctly when the method is *called on the object* (`ll.pushFront(3)`). Detach a method and call it alone and `this` becomes `undefined`.
+> **JS-specific note:** methods are declared directly in the class body — no `self`, no `def`. Inside a method, `this` refers to the instance, but only when the method is *called on the object* (`ll.pushFront(3)`). If you detach a method and call it on its own, `this` is `undefined` — keep calls attached.
 
 ---
 
 ## 2. Complexity Table
 
-| Operation | Singly Linked List | Array |
+| Operation | Singly Linked List | JS Array |
 |---|---|---|
 | Access by index | O(n) | O(1) |
 | Insert at front | O(1) | O(n) |
@@ -83,7 +83,7 @@ class DNode {
 }
 ```
 
-Doubly linked lists allow O(1) deletion of a node *you already have a reference to* (no need to find its predecessor), and can be walked in both directions. This is what Python's `collections.deque` uses internally — and it's the shape you'd reach for in JS too when you need fast two-ended operations.
+Doubly linked lists allow O(1) deletion of a node *you already have a reference to* (no need to find its predecessor), and can be walked in both directions. Python ships this as `collections.deque`; JavaScript has **no built-in deque**, so this is the shape you build yourself when you need fast two-ended operations.
 
 ---
 
@@ -117,10 +117,10 @@ function reverse(head) {
 
 ## 📚 Resources
 
-- **Docs:** [MDN — Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) · [W3Schools — DSA Linked Lists](https://www.w3schools.com/dsa/dsa_data_linkedlists.php)
+- **W3Schools:** [JavaScript Classes](https://www.w3schools.com/js/js_classes.asp) · [DSA Linked Lists](https://www.w3schools.com/dsa/dsa_data_linkedlists.php)
 - **YouTube:** [mycodeschool — Linked List Insertion](https://www.youtube.com/watch?v=6IZ8p9y1DOc)
 - **YouTube:** [William Fiset — Linked Lists](https://www.youtube.com/watch?v=vNAdEo2CB7Y) — algorithm-focused, very thorough
-- **Book:** [Eloquent JavaScript — Data Structures chapter](https://eloquentjavascript.net/04_data.html)
+- **Eloquent JavaScript:** [Data Structures chapter](https://eloquentjavascript.net/04_data.html)
 
 ---
 

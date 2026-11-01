@@ -2,17 +2,17 @@
 // Run this script with: node exercises.js
 
 // TODO: Exercise 1
-// Write a function 'timePush' that pushes `n` integers to an array using
+// Write a function 'timeAppend' that appends `n` integers to an array using
 // .push() and returns the elapsed time in seconds.
-function timePush(n) {
+function timeAppend(n) {
   // Write your solution here
 }
 
 
 // TODO: Exercise 2
-// Write a function 'timeUnshiftFront' that inserts `n` integers at index 0
+// Write a function 'timeInsertFront' that inserts `n` integers at index 0
 // using .unshift(x) and returns the elapsed time in seconds.
-function timeUnshiftFront(n) {
+function timeInsertFront(n) {
   // Write your solution here
 }
 
@@ -47,14 +47,8 @@ function mystery(nums) {
 
 
 // Main program
-function timeIt(fn) {
-  const start = Date.now();
-  fn();
-  return (Date.now() - start) / 1000;
-}
-
-console.log("Push 100,000 items:", timeIt(() => timePush(100000)));
-console.log("Unshift-at-front 20,000 items:", timeIt(() => timeUnshiftFront(20000)));
+console.log("Append 100,000 items:", timeAppend(100000));
+console.log("Insert-at-front 20,000 items:", timeInsertFront(20000));
 console.log(isPalindrome("racecar"));          // true
 console.log(isPalindrome("hello"));            // false
 console.log(maxSumSubarray([2, 1, 5, 1, 3, 2], 3));  // 9

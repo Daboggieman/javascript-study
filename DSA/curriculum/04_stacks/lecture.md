@@ -17,14 +17,14 @@ All of these are O(1) — that's the entire point of a stack. It intentionally g
 
 ---
 
-## 2. Implementing a Stack with an Array
+## 2. Implementing a Stack with a JS Array
 
-Arrays already support O(1) push/pop *from the end*, so they make a perfectly good stack — just never use `unshift(...)` or `shift()`, which touch the slow end.
+JS arrays already support O(1) push/pop *from the end*, so they make a perfectly good stack — just never use `unshift(...)` or `shift()`, which touch the slow (front) end.
 
 ```js
 class Stack {
   constructor() {
-    this._items = [];   // `_items` — the underscore is the informal "private" convention
+    this._items = [];   // the underscore is the informal "private" convention (real privacy: #items)
   }
 
   push(item) {
@@ -55,7 +55,7 @@ class Stack {
 }
 ```
 
-> **JS-specific note:** JS's real privacy mechanism is the `#field` syntax (`#items`), which is enforced by the language. In study code you'll mostly see the older `_items` underscore convention, which is only an agreement between humans. Also note Python raises `IndexError`; the closest JS match is `RangeError`.
+> **JS-specific note:** Python raises `IndexError` on popping an empty list; the closest JS match is `RangeError` (what you'd get from an out-of-range array access). Any `Error` subclass works — the habit of *throwing on misuse* is what matters.
 
 ## 3. Implementing a Stack with a Linked List
 
@@ -141,5 +141,5 @@ console.log(isBalanced("{[(])}"));    // false
 
 1. Implement `Stack` (array-based) fully, then implement `LinkedStack` and confirm they behave identically for the same sequence of pushes/pops.
 2. Implement `isBalanced` and test it against `"([)]"`, `"{[]}"`, and `"((("`.
-3. Use a stack to reverse a string without using `.reverse()` or building a second array with `slice`.
+3. Use a stack to reverse a string without using `.reverse()` or `split('').reverse().join('')`.
 4. Use a stack to check if a string is a palindrome (compare against your two-pointer solution from Lesson 01 — which approach uses more memory?).

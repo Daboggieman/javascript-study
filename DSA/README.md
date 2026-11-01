@@ -4,13 +4,13 @@ A dedicated module covering the data structures and algorithms every developer e
 
 - **`curriculum/`** — 19 lessons (`lecture.md` + `exercises.js`), same format as the root `CURRICULUM/` folder. Read the lecture, then fill in the TODOs in the exercises file.
 - **`quest/`** — 38 practice problems in the same style as the root `js-quest/` folder, spread across four difficulty tiers (`01_easy` → `04_extremely_hard`), each with a question spec (`quest/questions/<tier>/`) and a starter answer stub (`quest/answers/`).
-- **`resources/`** — `cheatsheet.md` (one-page reference for everything in this module) and `links.md` (every docs/YouTube/article link used throughout, consolidated).
+- **`resources/`** — `cheatsheet.md` (one-page reference for everything in this module) and `links.md` (every W3Schools/YouTube/article link used throughout, consolidated).
 
 ## Curriculum Order
 
 | # | Topic | # | Topic |
 |---|---|---|---|
-| 01 | Arrays (JS Arrays) | 11 | Graphs |
+| 01 | Lists (Dynamic Arrays) | 11 | Graphs |
 | 02 | Nodes | 12 | Linear Search |
 | 03 | Linked Lists | 13 | Binary Search |
 | 04 | Stacks | 14 | Bubble Sort |
