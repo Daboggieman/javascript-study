@@ -11,18 +11,19 @@ console.log(score);
 // Create a variable named 'gpa' and assign it the decimal value 3.8.
 // Print the variable's value and its type using console.log(typeof gpa).
 const gpa = 3.8;
+console.log(gpa);
 console.log(typeof gpa);
 
 // TODO: Exercise 3
 // Create a variable named 'isWeekend' and assign it a boolean value.
 // Print the variable.
-const isWeekend = false;
-console.log(isWeekend);
+const isWeekend = true;
+console.log(isWeekend)
 
 // TODO: Exercise 4
 // We have a string representation of a price below.
 // Convert it to a number, multiply it by 2, and print the result.
 const priceStr = "49.99";
 // Convert and print here:
-const priceFlt = Number(priceStr);
-console.log(priceFlt * 2);
+let result = Number(priceStr) * 2;
+console.log(result)

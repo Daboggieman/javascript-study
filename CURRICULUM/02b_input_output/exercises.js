@@ -9,8 +9,6 @@ async function main() {
 
   // TODO: Exercise 1
   // Ask the user for their name and print: "Hello, <name>"
-  const name = await rl.question("Enter your name: ");
-  console.log(`Hello, ${name}`);
 
   // TODO: Exercise 2
   // Ask the user for their age, convert it to a number, and print their age next year.
